@@ -3,10 +3,10 @@
 # This library contains functions which allow a robot using the LaserScan
 # message format for its sensors to detect obstacles to the front, left and
 # right.
-import roslib; roslib.load_manifest('Delete and replace with package name')
+import config
+import roslib; roslib.load_manifest(packagename)
 import rospy
 from sensor_msgs.msg import LaserScan
-import config
 
 # Analyzes data sent from the sensors function, and cycles through different
 # portions of it in order to check for obstacles. Afterwards, a list
