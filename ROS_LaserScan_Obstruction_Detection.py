@@ -6,8 +6,9 @@
 import config
 import roslib; roslib.load_manifest(config.packagename)
 import rospy
+import math
 from sensor_msgs.msg import LaserScan
-from '''YOURPACKAGENAME'''.msg import ObstructionList
+from assignment1.msg import ObstructionList
 
 # Analyzes data sent from the sensors() function, and cycles through different
 # portions of it in order to check for obstacles. Adds boolean values to the
@@ -32,19 +33,44 @@ def obstrdetect(data):
 		if z < config.leftdistance:
 			obstr.leftobstr = True;
 			break
-    for t in data.ranges[config.frontrightbegin:config.frontrightend]:
-        if t < config.frontrightdistance:
-            obstr.frontrightobstr = True;
-            break
-    for v in data.ranges[config.frontleftbegin:config.frontleftend]:
-        if v < config.frontleftdistance:
+	for t in data.ranges[config.frontrightbegin:config.frontrightend]:
+		if t < config.frontrightdistance:
+			obstr.frontrightobstr = True;
+			break
+	for v in data.ranges[config.frontleftbegin:config.frontleftend]:
+		if v < config.frontleftdistance:
             obstr.frontleftobstr = True;
-            break
+			break
 	obstrpub = rospy.Publisher('obstructions', ObstructionList)
-    timeofpub = rospy.time.now()
-    obstr.pubtime = timeofpub;
+	timeofpub = rospy.time.now()
+	obstr.pubtime = timeofpub;
 	obstrpub.publish(obstr)
 
-# Calls obstrdetect with the sensor data as arguments.
+# Examines outliers in the sensor data to provide more reliable results.
+def datafilter(data):
+	avg = sum(data.ranges)/len(data.ranges)
+	varianceslist = []
+	for x in data.ranges:
+		varianceslist.append((x-avg)**2)
+	stddev = math.sqrt(sum(varianceslist)/(len(data.ranges)-1))
+	outliers = {}
+	for x in range(len(data.ranges)):
+		if math.fabs(data.ranges[x]-avg) > stddev*config.outlierthreshold:
+			outliers.update({x:data.ranges[x]})
+	outlierkeys = outliers.keys()
+	outlierkeys.sort()
+	for x in range(1, len(outlierkeys)-1):
+		if math.fabs(outlierkeys[x]-outlierkeys[x-1]) > len(data.ranges)/10 or math.fabs(outlierkeys[x]-outlierkeys[x+1]) > len(data.ranges)/10:
+			del data.ranges[x]
+			data.ranges.insert(x, avg)
+	filtereddata = data
+	filterpub = rospy.Publisher('filteredlaser', LaserScan)
+	filterpub.publish(filtereddata)
+	rospy.Subscriber('filteredlaser', LaserScan, obstrdetect)
+
+# Calls obstrdetect or datafilter with the sensor data as arguments.
 def sensors():
-	rospy.Subscriber(config.subscribednode, LaserScan, obstrdetect)
+	if config.autofilter == False:
+		rospy.Subscriber(config.subscribednode, LaserScan, obstrdetect)
+	elif config.autofilter == True:
+		rospy.Subscriber(config.subscribednode, LaserScan, datafilter)
