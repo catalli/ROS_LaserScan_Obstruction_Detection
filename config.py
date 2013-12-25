@@ -6,8 +6,16 @@
 # left, right, front-left and front-right of your robot, and the minimum
 # distance (m) for the laser scans
 # to be considered obstructions.
+# Change the "autofilter" variable from "False" to "True" if you want the
+# sensor data to be averaged out in order to reduce errors. This may make
+# the process slower.
+# The "outlierthreshold" variable is the number of standard deviations a
+# given value can deviate from the average before being subject to examination
+# for filtering.
 packagename = 'your package name here'
 subscribednode = 'your subscribed topic name here'
+autofilter = True
+outlierthreshold = 1.25
 frontbegin = 260
 frontend = 390
 rightbegin = 0
