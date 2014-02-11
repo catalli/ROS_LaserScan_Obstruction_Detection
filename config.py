@@ -14,7 +14,7 @@
 # for filtering.
 packagename = 'your package name here'
 subscribednode = 'your subscribed topic name here'
-autofilter = True
+autofilter = False
 outlierthreshold = 1.25
 frontbegin = 260
 frontend = 390
