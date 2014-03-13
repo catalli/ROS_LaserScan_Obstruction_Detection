@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2013 Ali Cataltepe, licensed under Creative Commons 3.0.
+# Licensed under Creative Commons 3.0. to Ali Çataltepe.
 # This library contains functions which allow a robot using the LaserScan
 # message format for its sensors to detect obstacles to the front, left and
 # right.
