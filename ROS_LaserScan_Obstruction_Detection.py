@@ -38,9 +38,9 @@ def obstrdetect(data):
 			obstr.frontrightobstr = True;
 			break
 	for v in data.ranges[config.frontleftbegin:config.frontleftend]:
-		if v < config.frontleftdistance:
+        if v < config.frontleftdistance:
             obstr.frontleftobstr = True;
-			break
+            break
 	obstrpub = rospy.Publisher('obstructions', ObstructionList)
 	timeofpub = rospy.time.now()
 	obstr.pubtime = timeofpub;
