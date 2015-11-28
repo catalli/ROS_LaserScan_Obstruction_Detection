@@ -1,6 +1,3 @@
-By Ali Cataltepe, licensed under Creative Commons.
-You may use this module as long as you give credit.
-
 SETTING UP THE MODULE
 First make sure that you are using ROS Fuerte, and that the files config.py and ROS_LaserScan_Obstruction_Detection.py are in the same directory. The package you are using the script in should have rospy and sensor_msgs as dependencies, in addition to any other dependencies your package has. Make sure both scripts are executable, and that they are in the same directory as the script importing them. Go to config.py and edit the variables according to the specifications of your laser scanner. Make a directory called ‘msg’ (no quotes) in your package, and copy ObstructionList.msg into it. Go to your CMakeLists.txt file in your package and uncomment “rosbuild_genmsg()”. Open a terminal window, navigate to your package and type ‘make’ in the command line. After your computer has completed the process, the module is ready to use.
 
